@@ -2,6 +2,9 @@ import {useState} from 'react'
 import './App.css'
 
 const Statistics = (props) => {
+    if (props.good === 0 && props.bad === 0 && props.neutral === 0) {
+        return <p>No feedback given</p>
+    }
     return (
         <div>
             <h1>statistics</h1>
