@@ -3,21 +3,30 @@ import './App.css'
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
-const StatisticLine = ({text, value, text2}) => <p>{text} {value} {text2}</p>
+const StatisticLine = ({text, value, text2}) => (
+    <tr>
+        <td style={{textAlign: "left"}}>{text}</td>
+        <td style={{textAlign: "left", paddingLeft: "8px"}}>
+            {value} {text2}
+        </td>
+    </tr>
+);
 
-const Statistics = (props) => {
-    if (props.good === 0 && props.bad === 0 && props.neutral === 0) {
+const Statistics = ({good, neutral, bad, count, total}) => {
+    if (good === 0 && neutral === 0 && bad === 0) {
         return <p>No feedback given</p>
     }
     return (
-        <div>
-            <StatisticLine text="good" value={props.good}/>
-            <StatisticLine text="neutral" value={props.neutral}/>
-            <StatisticLine text="bad" value={props.bad}/>
-            <StatisticLine text="all" value={props.count}/>
-            <StatisticLine text="average" value={props.total / props.count}/>
-            <StatisticLine text="positive" value={props.good / props.count * 100} text2="%"/>
-        </div>
+        <table style={{margin: "0 auto", borderCollapse: "collapse"}}>
+            <tbody>
+            <StatisticLine text="good" value={good}/>
+            <StatisticLine text="neutral" value={neutral}/>
+            <StatisticLine text="bad" value={bad}/>
+            <StatisticLine text="all" value={count}/>
+            <StatisticLine text="average" value={(total / count).toFixed(2)}/>
+            <StatisticLine text="positive" value={(good / count * 100).toFixed(2)} text2="%"/>
+            </tbody>
+        </table>
     )
 }
 
