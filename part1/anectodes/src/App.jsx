@@ -16,12 +16,12 @@ const App = () => {
     const [selected, setSelected] = useState(0)
     const [points, setPoints] = useState(Array(8).fill(0));
 
-    const nextAnectode = () => {
+    const nextAnecdote = () => {
         const newSelected = Math.floor(Math.random() * 8);
         setSelected(newSelected);
     }
 
-    const voteAnectode = () => {
+    const voteAnecdote = () => {
         const copy = [...points]
         copy[selected] += 1
         setPoints(copy)
@@ -33,8 +33,8 @@ const App = () => {
                 <h1>Anecdote of the day</h1>
                 <p>{anecdotes[selected]}</p>
                 <p>has {points[selected]} votes</p>
-                <button onClick={voteAnectode}>vote</button>
-                <button onClick={nextAnectode}>next anectode</button>
+                <button onClick={voteAnecdote}>vote</button>
+                <button onClick={nextAnecdote}>next anectode</button>
             </div>
             <div>
                 <h1>Anecdote with most votes</h1>
