@@ -14,7 +14,7 @@ const App = () => {
     ]
 
     const [selected, setSelected] = useState(0)
-    const [points, setPoints] = useState(Array(8).fill(0))
+    const [points, setPoints] = useState(Array(8).fill(0));
 
     const nextAnectode = () => {
         const newSelected = Math.floor(Math.random() * 8);
