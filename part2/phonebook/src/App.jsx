@@ -1,24 +1,24 @@
 /* eslint-disable react/prop-types */
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import axios from 'axios'
+import personService from './services/persons'
 
-const Filter = ({filter, handleFilterChange}) => {
+const Filter = ({ filter, handleFilterChange }) => {
     return (
         <div>
-            filter shown with <input value={filter} onChange={handleFilterChange}/>
+            filter shown with <input value={filter} onChange={handleFilterChange} />
         </div>
     )
 }
 
-const PersonForm = ({addPerson, newName, handleNameChange, newNumber, handleNumberChange}) => {
+const PersonForm = ({ addPerson, newName, handleNameChange, newNumber, handleNumberChange }) => {
     return (
         <form onSubmit={addPerson}>
             <div>
-                name: <input value={newName} onChange={handleNameChange}/>
+                name: <input value={newName} onChange={handleNameChange} />
             </div>
             <div>
-                number: <input value={newNumber} onChange={handleNumberChange}/>
+                number: <input value={newNumber} onChange={handleNumberChange} />
             </div>
             <p></p>
             <div>
@@ -28,11 +28,11 @@ const PersonForm = ({addPerson, newName, handleNameChange, newNumber, handleNumb
     )
 }
 
-const Persons = ({persons, filter}) => {
+const Persons = ({ persons, filter }) => {
     return (
         <ul>
             {persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())).map(person =>
-                <li style={{listStyleType: 'none'}} key={person.id}>{person.name} {person.number}</li>
+                <li style={{ listStyleType: 'none' }} key={person.id}>{person.name} {person.number}</li>
             )}
         </ul>
     )
@@ -45,10 +45,10 @@ const App = () => {
     const [filter, setFilter] = useState('')
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                setPersons(response.data)
+        personService
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
             })
     }, [])
 
@@ -64,10 +64,10 @@ const App = () => {
             setNewName('')
             return
         }
-        axios
-            .post('http://localhost:3001/persons', personObject)
-            .then(response => {
-                setPersons(persons.concat(response.data))
+        personService
+            .create(personObject)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('')
             })
@@ -88,12 +88,12 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Filter filter={filter} handleFilterChange={handleFilterChange}/>
+            <Filter filter={filter} handleFilterChange={handleFilterChange} />
             <h3>add a new</h3>
             <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
-                        newNumber={newNumber} handleNumberChange={handleNumberChange}/>
+                newNumber={newNumber} handleNumberChange={handleNumberChange} />
             <h3>Numbers</h3>
-            <Persons persons={persons} filter={filter}/>
+            <Persons persons={persons} filter={filter} />
         </div>
     )
 }
