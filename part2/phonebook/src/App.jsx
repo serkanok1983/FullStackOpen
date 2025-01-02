@@ -28,11 +28,23 @@ const PersonForm = ({ addPerson, newName, handleNameChange, newNumber, handleNum
     )
 }
 
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, setPersons }) => {
+    const deletePerson = (id, name) => {
+        if (window.confirm(`Delete ${name}?`)) {
+            personService
+                .remove(id)
+                .then(() => {
+                    setPersons(persons.filter(person => person.id !== id))
+                })
+        }
+    }
+
     return (
         <ul>
             {persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())).map(person =>
-                <li style={{ listStyleType: 'none' }} key={person.id}>{person.name} {person.number}</li>
+                <li style={{ listStyleType: 'none', marginBottom: '5px' }} key={person.id}>
+                    {person.name} {person.number} <button onClick={() => deletePerson(person.id, person.name)}>delete</button>
+                </li>
             )}
         </ul>
     )
@@ -57,7 +69,7 @@ const App = () => {
         const personObject = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1
+            // id: persons.length + 1
         }
         if (persons.find(person => person.name === newName)) {
             alert(`${newName} is already added to phonebook`)
@@ -93,7 +105,7 @@ const App = () => {
             <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
                 newNumber={newNumber} handleNumberChange={handleNumberChange} />
             <h3>Numbers</h3>
-            <Persons persons={persons} filter={filter} />
+            <Persons persons={persons} filter={filter} setPersons={setPersons} />
         </div>
     )
 }
