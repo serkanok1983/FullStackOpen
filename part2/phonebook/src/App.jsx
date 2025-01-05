@@ -1,7 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
-import './App.css'
 import personService from './services/persons'
+
+const Notification = ({ message }) => {
+    if (message === null) {
+        return null
+    }
+
+    return (
+        <div className="message">
+            {message}
+        </div>
+    )
+}
 
 const Filter = ({ filter, handleFilterChange }) => {
     return (
@@ -55,6 +66,7 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+    const [message, setMessage] = useState(null)
 
     useEffect(() => {
         personService
@@ -81,6 +93,10 @@ const App = () => {
                         setNewName('')
                         setNewNumber('')
                     })
+                setMessage(`Updated ${newName}`)
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
             }
             return
         }
@@ -91,6 +107,10 @@ const App = () => {
                 setNewName('')
                 setNewNumber('')
             })
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {
+            setMessage(null)
+        }, 5000)
     }
 
     const handleNameChange = (event) => {
@@ -108,6 +128,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} />
             <Filter filter={filter} handleFilterChange={handleFilterChange} />
             <h3>add a new</h3>
             <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
