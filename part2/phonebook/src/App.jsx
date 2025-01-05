@@ -7,9 +7,20 @@ const Notification = ({ message }) => {
         return null
     }
 
+    const { type, text } = message
+    const messageStyle = {
+        color: type === "info" ? "green" : "red",
+        background: "lightgrey",
+        fontSize: 20,
+        borderStyle: "solid",
+        borderColor: type === "info" ? "green" : "red",
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10
+    }
     return (
-        <div className="message">
-            {message}
+        <div style={messageStyle}>
+            {text}
         </div>
     )
 }
@@ -39,12 +50,19 @@ const PersonForm = ({ addPerson, newName, handleNameChange, newNumber, handleNum
     )
 }
 
-const Persons = ({ persons, filter, setPersons }) => {
+const Persons = ({ persons, filter, setPersons, setMessage }) => {
     const deletePerson = (id, name) => {
         if (window.confirm(`Delete ${name}?`)) {
             personService
                 .remove(id)
                 .then(() => {
+                    setPersons(persons.filter(person => person.id !== id))
+                })
+                .catch(() => {
+                    setMessage({ type: "error", text: `Information of ${name} has already been removed from server` })
+                    setTimeout(() => {
+                        setMessage(null)
+                    }, 5000)
                     setPersons(persons.filter(person => person.id !== id))
                 })
         }
@@ -93,7 +111,14 @@ const App = () => {
                         setNewName('')
                         setNewNumber('')
                     })
-                setMessage(`Updated ${newName}`)
+                    .catch(() => {
+                        setMessage({ type: "error", text: `Information of ${newName} has already been removed from server` })
+                        setTimeout(() => {
+                            setMessage(null)
+                        }, 5000)
+                        setPersons(persons.filter(p => p.id !== person.id))
+                    })
+                setMessage({ type: "info", text: `Updated ${newName}` })
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
@@ -107,7 +132,7 @@ const App = () => {
                 setNewName('')
                 setNewNumber('')
             })
-        setMessage(`Added ${newName}`)
+        setMessage({ type: "info", text: `Added ${newName}` })
         setTimeout(() => {
             setMessage(null)
         }, 5000)
@@ -134,7 +159,7 @@ const App = () => {
             <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
                 newNumber={newNumber} handleNumberChange={handleNumberChange} />
             <h3>Numbers</h3>
-            <Persons persons={persons} filter={filter} setPersons={setPersons} />
+            <Persons persons={persons} filter={filter} setPersons={setPersons} setMessage={setMessage} />
         </div>
     )
 }

@@ -1,9 +1,3 @@
-.message {
-    color: green;
-    background: lightgrey;
-    border: 1px solid darkgreen;
-    padding: 10px;
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    border-radius: 5px;
+#root {
+    font-family: sans-serif;
 }
