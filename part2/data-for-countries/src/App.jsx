@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import './App.css'
 
@@ -7,6 +7,7 @@ const App = () => {
     const [countries, setCountries] = useState([])
     const [filteredCountries, setFilteredCountries] = useState([])
     const [country, setCountry] = useState(null)
+    const [weather, setWeather] = useState(null)
 
     useEffect(() => {
         axios
@@ -32,7 +33,7 @@ const App = () => {
                     capital: country.capital[0],
                     area: country.area,
                     languages: Object.values(country.languages).join(', '),
-                    flag: country.flags.png
+                    flag: country.flags.png,
                 })
             } else {
                 setCountry(null)
@@ -42,6 +43,25 @@ const App = () => {
             setCountry(null)
         }
     }, [value, countries])
+
+    useEffect(() => {
+        if (country) {
+            const apiKey = import.meta.env.OPEN_WEATHER_MAP_KEY
+            const capital = country.capital
+            axios
+                .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}$units=metric`)
+                .then(response => {
+                    setWeather({
+                        temperature: response.data.main.temp,
+                        wind: response.data.wind.speed,
+                        icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+                    })
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error)
+                })
+        }
+    }, [country])
 
     const handleChange = (event) => {
         setValue(event.target.value)
@@ -53,7 +73,7 @@ const App = () => {
             capital: country.capital[0],
             area: country.area,
             languages: Object.values(country.languages).join(', '),
-            flag: country.flags.png
+            flag: country.flags.png,
         })
     }
 
@@ -82,6 +102,14 @@ const App = () => {
                         ))}
                     </ul>
                     <img src={country.flag} alt={`Flag of ${country.name}`} width="100" />
+                    {weather && (
+                        <div>
+                            <h2>Weather in {country.capital}</h2>
+                            <p><strong>Temperature:</strong> {weather.temperature} °C</p>
+                            <img src={weather.icon} alt="Weather icon" />
+                            <p><strong>Wind:</strong> {weather.wind} m/s</p>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
