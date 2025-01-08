@@ -47,6 +47,16 @@ const App = () => {
         setValue(event.target.value)
     }
 
+    const handleShowCountry = (country) => {
+        setCountry({
+            name: country.name.common,
+            capital: country.capital[0],
+            area: country.area,
+            languages: Object.values(country.languages).join(', '),
+            flag: country.flags.png
+        })
+    }
+
     return (
         <div>
             <input type="text" value={value} onChange={handleChange} placeholder='Search for a country' />
@@ -54,7 +64,9 @@ const App = () => {
             {filteredCountries.length > 1 && filteredCountries.length <= 10 && (
                 <ul>
                     {filteredCountries.map(country => (
-                        <li key={country.cca3}>{country.name.common}</li>
+                        <li key={country.cca3}>
+                            {country.name.common} <button onClick={() => handleShowCountry(country)}>Show</button>
+                        </li>
                     ))}
                 </ul>
             )}
