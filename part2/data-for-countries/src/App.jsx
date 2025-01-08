@@ -49,7 +49,7 @@ const App = () => {
             const apiKey = import.meta.env.OPEN_WEATHER_MAP_KEY
             const capital = country.capital
             axios
-                .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}$units=metric`)
+                .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}&units=metric`)
                 .then(response => {
                     setWeather({
                         temperature: response.data.main.temp,
