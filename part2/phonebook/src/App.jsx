@@ -132,6 +132,12 @@ const App = () => {
                 setNewName('')
                 setNewNumber('')
             })
+            .catch(error => {
+                setMessage({ type: "error", text: error.response.data.error })
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
+            })
         setMessage({ type: "info", text: `Added ${newName}` })
         setTimeout(() => {
             setMessage(null)
