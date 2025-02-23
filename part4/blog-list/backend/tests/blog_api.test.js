@@ -88,6 +88,34 @@ describe('blog api tests', () => {
         assert.ok(!titles.includes(blogToDelete.title))
 
     })
+
+    test('updating a blog', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+
+        const updatedBlog = {
+            title: 'React patterns',
+            author: 'Michael Chan',
+            url: 'https://reactpatterns.com/',
+            likes: 7
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlog)
+            .expect(200)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+
+        const updatedBlogFromDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+
+        assert.strictEqual(updatedBlogFromDb.title, updatedBlog.title)
+        assert.strictEqual(updatedBlogFromDb.author, updatedBlog.author)
+        assert.strictEqual(updatedBlogFromDb.url, updatedBlog.url)
+        assert.strictEqual(updatedBlogFromDb.likes, updatedBlog.likes)
+    })
 })
 
 
