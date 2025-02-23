@@ -10,6 +10,9 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const blog = new Blog(req.body)
+    if (!blog.title || !blog.url) {
+        return res.status(400).json({error: 'title and url are required'})
+    }
     const savedBlog = await blog.save()
     res.status(201).json(savedBlog)
 })

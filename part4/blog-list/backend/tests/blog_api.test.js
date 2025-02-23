@@ -60,6 +60,16 @@ describe('blog api tests', () => {
         const response = await api.post('/api/blogs').send(newBlog)
         assert.strictEqual(response.body.likes, 0)
     })
+
+    test('blog without title or url is not added', async () => {
+        const newBlog = {
+            author: 'Michael Chan',
+            likes: 7
+        }
+
+        const response = await api.post('/api/blogs').send(newBlog)
+        assert.strictEqual(response.status, 400)
+    })
 })
 
 
