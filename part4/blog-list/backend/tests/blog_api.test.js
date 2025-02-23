@@ -49,6 +49,17 @@ describe('blog api tests', () => {
         const titles = blogsAtEnd.map(blog => blog.title)
         assert.ok(titles.includes('React patterns'))
     })
+
+    test('if likes are not defined, they default to 0', async () => {
+        const newBlog = {
+            title: 'React patterns',
+            author: 'Michael Chan',
+            url: 'https://reactpatterns.com/'
+        }
+
+        const response = await api.post('/api/blogs').send(newBlog)
+        assert.strictEqual(response.body.likes, 0)
+    })
 })
 
 
