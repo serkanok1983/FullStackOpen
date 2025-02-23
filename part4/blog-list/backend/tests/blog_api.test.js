@@ -70,6 +70,24 @@ describe('blog api tests', () => {
         const response = await api.post('/api/blogs').send(newBlog)
         assert.strictEqual(response.status, 400)
     })
+
+    test('deleting a blog', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+        const titles = blogsAtEnd.map(blog => blog.title)
+
+        assert.ok(!titles.includes(blogToDelete.title))
+
+    })
 })
 
 
