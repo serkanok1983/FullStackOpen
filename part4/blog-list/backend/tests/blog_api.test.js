@@ -28,6 +28,27 @@ describe('blog api tests', () => {
             assert.strictEqual(blog._id, undefined, "'_id' should be undefined")
         })
     })
+
+    test('a valid blog can be added', async () => {
+        const newBlog = {
+            title: 'React patterns',
+            author: 'Michael Chan',
+            url: 'https://reactpatterns.com/',
+            likes: 7
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+        const titles = blogsAtEnd.map(blog => blog.title)
+        assert.ok(titles.includes('React patterns'))
+    })
 })
 
 
